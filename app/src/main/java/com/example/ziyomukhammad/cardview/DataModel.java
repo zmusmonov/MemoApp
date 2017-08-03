@@ -10,11 +10,13 @@ public class DataModel {
     String subtitle;
     String date;
 
-    public DataModel(String title, String sustitle, String date) {
+    public DataModel(String title, String subtitle, String date) {
         this.title = title;
-        this.subtitle = sustitle;
+        this.subtitle = subtitle;
         this.date = date;
     }
+
+
 
     public String getTitle() {
         return title;
