@@ -10,6 +10,7 @@ public class DataModel {
     String subtitle;
     String date;
 
+    public DataModel(){}
     public DataModel(String title, String subtitle, String date) {
         this.title = title;
         this.subtitle = subtitle;

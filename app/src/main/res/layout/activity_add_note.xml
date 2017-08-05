@@ -15,6 +15,19 @@
         android:layout_height="120dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"/>
+
+    <EditText
+        android:id="@+id/note_title_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Title"
+        android:inputType="textAutoComplete"
+        android:textSize="16dp"
+        android:gravity="center"
+        android:layout_below="@+id/take_picture_add_activity"
+        android:layout_marginBottom="16dp"
+        />
+
     <EditText
         android:id="@+id/note_text_et"
         android:padding="16dp"
@@ -26,7 +39,7 @@
         android:minLines="3"
         android:layout_marginLeft="24dp"
         android:layout_marginRight="24dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="35dp"
         android:layout_below="@+id/take_picture_add_activity"
         android:layout_centerHorizontal="true"/>
 
