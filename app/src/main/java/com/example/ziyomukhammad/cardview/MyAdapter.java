@@ -11,14 +11,13 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 /**
- * Created by ZiyoMukhammad on 8/3/17.
+ * Created by Ziyo  Mukhammad on 8/3/17.
  */
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     private ArrayList<DataModel> dataSet;
 
-    
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
         public TextView mNoteTitleTextView;

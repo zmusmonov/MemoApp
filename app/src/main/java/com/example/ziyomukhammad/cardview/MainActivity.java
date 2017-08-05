@@ -18,35 +18,34 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import butterknife.BindInt;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnCheckedChanged;
+import butterknife.OnClick;
+
 public class MainActivity extends AppCompatActivity {
     private DatabaseReference mNotesReference;
 
-    private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    private Button mNewNoteButton;
 
+    @BindView(R.id. my_recycler_view)RecyclerView mRecyclerView;
+    @BindView(R.id.new_memo_button)Button mNewNoteButton;
 
     private static ArrayList<DataModel> myData;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
         mNotesReference = FirebaseDatabase
                 .getInstance()
                 .getReference()
                 .child(Constants.FIREBASE_CHILD_NOTES);
-
-
-
-        mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
-
-        mNewNoteButton = (Button) findViewById(R.id.new_memo_button);
 
         mRecyclerView.setHasFixedSize(true);
 
@@ -59,7 +58,8 @@ public class MainActivity extends AppCompatActivity {
         DatabaseReference noteRef = FirebaseDatabase
                 .getInstance()
                 .getReference(Constants.FIREBASE_CHILD_NOTES);
-// Attach a listener to read the data at our posts reference
+
+        // Attach a listener to read the data at our posts reference
         noteRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -67,9 +67,9 @@ public class MainActivity extends AppCompatActivity {
 //                DataModel note = dataSnapshot.getValue(DataModel.class);
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     myData.add(snapshot.getValue(DataModel.class));
+
                     System.out.println(snapshot.getValue(DataModel.class).getTitle());
                     Log.d( "Size",String.valueOf( myData.size()) );
-
                 }
                 mAdapter = new MyAdapter(myData);
                 mRecyclerView.setAdapter(mAdapter);
@@ -82,24 +82,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
-
-//        myData.add(new DataModel("Ertengi ishla", "Egzamen", "pryam ertag"));
       Log.d( "Sizes",String.valueOf( myData.size()) );
-
-
         mAdapter = new MyAdapter(myData);
         mRecyclerView.setAdapter(mAdapter);
 
-        mNewNoteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Intent intent = new Intent(MainActivity.this, AddNoteActivity.class);
-                startActivityForResult(intent, 1);
-
-            }
-        });
     }
         @Override
         protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -109,8 +95,6 @@ public class MainActivity extends AppCompatActivity {
                     String text = data.getStringExtra("text");
                     String date = data.getStringExtra("date");
 
-//                    myData.add(new DataModel(text, date, ""));
-
                     mAdapter = new MyAdapter(myData);
                     mRecyclerView.setAdapter(mAdapter);
 
@@ -118,6 +102,11 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+    @OnClick(R.id.new_memo_button)
+    public void NewMemo(View v){
+        Intent intent = new Intent(MainActivity.this, AddNoteActivity.class);
+        startActivityForResult(intent, 1);
+    }
 }
 
 
