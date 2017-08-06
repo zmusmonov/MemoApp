@@ -32,7 +32,6 @@ public class AddNoteActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.N)
 
     String dateStr = "";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
@@ -66,9 +65,9 @@ public class AddNoteActivity extends AppCompatActivity {
     private void updateLabel(Calendar calendar) {
         String myFormat = "MM/dd/yy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-
+        String date_only = sdf.format(calendar.getTime());
         mDateTV.setText(sdf.format(calendar.getTime()));
-        dateStr = calendar.getTime().toString();
+        dateStr = mDateTV.getText().toString();
     }
 
 
@@ -76,7 +75,7 @@ public class AddNoteActivity extends AppCompatActivity {
         DatabaseReference noteRef = FirebaseDatabase
                 .getInstance()
                 .getReference(Constants.FIREBASE_CHILD_NOTES);
-        DataModel new_note = new DataModel(mNoteTitle.getText().toString(), mNoteTextTV.getText().toString(),"12/04/2013");
+        DataModel new_note = new DataModel(mNoteTitle.getText().toString(), mNoteTextTV.getText().toString(), dateStr);
         noteRef.push().setValue(new_note);
     }
 
@@ -89,6 +88,7 @@ public class AddNoteActivity extends AppCompatActivity {
         saveNoteToFirebase();
         setResult( Activity.RESULT_OK, returnIntent );
         finish();
+        Log.d( "Ziizi", "AddNewMemo: "+ dateStr );
     }
 
     @OnClick(R.id.cancel_note_button)

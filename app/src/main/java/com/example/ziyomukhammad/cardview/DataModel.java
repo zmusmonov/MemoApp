@@ -9,15 +9,26 @@ public class DataModel {
     String title;
     String subtitle;
     String date;
+    String pushID;
 
-    public DataModel(){}
+
+    public DataModel() {
+    }
+
     public DataModel(String title, String subtitle, String date) {
         this.title = title;
         this.subtitle = subtitle;
         this.date = date;
+        this.pushID = pushID;
     }
 
+    public String getPushID() {
+        return pushID;
+    }
 
+    public void setPushID(String pushID) {
+        this.pushID = pushID;
+    }
 
     public String getTitle() {
         return title;

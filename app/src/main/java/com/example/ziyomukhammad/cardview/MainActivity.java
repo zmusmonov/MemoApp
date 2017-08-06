@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+
         mNotesReference = FirebaseDatabase
                 .getInstance()
                 .getReference()
@@ -66,8 +67,9 @@ public class MainActivity extends AppCompatActivity {
                 myData = new ArrayList<DataModel>();
 //                DataModel note = dataSnapshot.getValue(DataModel.class);
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    myData.add(snapshot.getValue(DataModel.class));
-
+                    DataModel note = snapshot.getValue(DataModel.class);
+                    note.setPushID( snapshot.getKey() );
+                    myData.add(note);
                     System.out.println(snapshot.getValue(DataModel.class).getTitle());
                     Log.d( "Size",String.valueOf( myData.size()) );
                 }
