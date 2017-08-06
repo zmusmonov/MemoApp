@@ -38,6 +38,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.example.ziyomukhammad.cardview.Constants.CAMERA_REQUEST;
+
 public class AddNoteActivity extends AppCompatActivity {
 
     private static final int SELECT_PICTURE = 100;
@@ -151,12 +153,14 @@ public class AddNoteActivity extends AppCompatActivity {
         builder.setItems(options, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
-                if (options[item].equals("Take Photo")) {
+                if (options[item].equals("Choose from Gallery")) {
                     Intent intent = new Intent();
                     intent.setType("image/*");
                     intent.setAction(Intent.ACTION_GET_CONTENT);
                     startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
-                } else if (options[item].equals("Choose from Gallery")) {
+                } else if (options[item].equals("Take Photo")) {
+                    Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(cameraIntent, CAMERA_REQUEST);
 
 
                 } else if (options[item].equals("Cancel")) {
@@ -187,6 +191,10 @@ public class AddNoteActivity extends AppCompatActivity {
 
 
                 }
+            }
+            else if(requestCode == Constants.CAMERA_REQUEST){
+                Bitmap photo = (Bitmap) data.getExtras().get("data");
+                mNoteImage.setImageBitmap(photo);
             }
         }
     }
