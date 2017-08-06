@@ -32,82 +32,76 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager mLayoutManager;
 
 
-    @BindView(R.id. my_recycler_view)RecyclerView mRecyclerView;
-    @BindView(R.id.new_memo_button)Button mNewNoteButton;
+    @BindView(R.id.my_recycler_view)
+    RecyclerView mRecyclerView;
+    @BindView(R.id.new_memo_button)
+    Button mNewNoteButton;
 
     private static ArrayList<DataModel> myData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+        super.onCreate( savedInstanceState );
+        setContentView( R.layout.activity_main );
+        ButterKnife.bind( this );
+        FirebaseDatabase.getInstance().setPersistenceEnabled( true );
 
 
         mNotesReference = FirebaseDatabase
                 .getInstance()
                 .getReference()
-                .child(Constants.FIREBASE_CHILD_NOTES);
+                .child( Constants.FIREBASE_CHILD_NOTES );
 
-        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setHasFixedSize( true );
 
-        mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        mLayoutManager = new LinearLayoutManager( this );
+        mRecyclerView.setLayoutManager( mLayoutManager );
 
         myData = new ArrayList<DataModel>();
 
 
         DatabaseReference noteRef = FirebaseDatabase
                 .getInstance()
-                .getReference(Constants.FIREBASE_CHILD_NOTES);
+                .getReference( Constants.FIREBASE_CHILD_NOTES );
+        noteRef.keepSynced( true );
+
 
         // Attach a listener to read the data at ourr posts reference
-        noteRef.addValueEventListener(new ValueEventListener() {
+        noteRef.addValueEventListener( new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 myData = new ArrayList<DataModel>();
 //                DataModel note = dataSnapshot.getValue(DataModel.class);
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    DataModel note = snapshot.getValue(DataModel.class);
+                    DataModel note = snapshot.getValue( DataModel.class );
                     note.setPushID( snapshot.getKey() );
-                    myData.add(note);
-                    System.out.println(snapshot.getValue(DataModel.class).getTitle());
-                    Log.d( "Size",String.valueOf( myData.size()) );
+                    myData.add( note );
+                    System.out.println( snapshot.getValue( DataModel.class ).getTitle() );
+                    Log.d( "Size", String.valueOf( myData.size() ) );
                 }
-                mAdapter = new MyAdapter(myData);
-                mRecyclerView.setAdapter(mAdapter);
+                mAdapter = new MyAdapter( myData );
+                mRecyclerView.setAdapter( mAdapter );
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                System.out.println("The read failed: " + databaseError.getCode());
+                System.out.println( "The read failed: " + databaseError.getCode() );
             }
-        });
+        } );
 
 
-      Log.d( "Sizes",String.valueOf( myData.size()) );
-        mAdapter = new MyAdapter(myData);
-        mRecyclerView.setAdapter(mAdapter);
+        Log.d( "Sizes", String.valueOf( myData.size() ) );
+        mAdapter = new MyAdapter( myData );
+        mRecyclerView.setAdapter( mAdapter );
 
     }
-        @Override
-        protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-            if(requestCode == 1){
-                if(resultCode == Activity.RESULT_OK){
-                    String text = data.getStringExtra("text");
-                    String date = data.getStringExtra("date");
 
-                    mAdapter = new MyAdapter(myData);
-                    mRecyclerView.setAdapter(mAdapter);
-                }
-            }
-        }
 
     @OnClick(R.id.new_memo_button)
-    public void NewMemo(View v){
-        Intent intent = new Intent(MainActivity.this, AddNoteActivity.class);
-        startActivityForResult(intent, 1);
+    public void NewMemo(View v) {
+        Intent intent = new Intent( MainActivity.this, AddNoteActivity.class );
+        startActivity(intent);
     }
 }
 

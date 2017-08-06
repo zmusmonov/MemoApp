@@ -19,13 +19,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -42,9 +46,10 @@ import static com.example.ziyomukhammad.cardview.Constants.CAMERA_REQUEST;
 
 public class AddNoteActivity extends AppCompatActivity {
 
-    private static final int SELECT_PICTURE = 100;
+
 
     private  String test = "Push test";
+    private Boolean isNew = true;
 
     @BindView(R.id.note_text_et)
     EditText mNoteTextTV;
@@ -54,7 +59,8 @@ public class AddNoteActivity extends AppCompatActivity {
     EditText mNoteTitle;
     @BindView(R.id.take_picture_add_activity)
     ImageView mNoteImage;
-
+    @BindView( R.id.save_note_button )
+    Button mSaveButton;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
 
@@ -87,6 +93,33 @@ public class AddNoteActivity extends AppCompatActivity {
             }
         });
 
+        Intent intent = getIntent();
+        isNew = intent.getBooleanExtra( "isNew", true );
+        Log.d("isNew",isNew+"");
+        if(isNew==false){
+            Log.d("isNew","I am here");
+            DatabaseReference noteRef = FirebaseDatabase
+                    .getInstance()
+                    .getReference(Constants.FIREBASE_CHILD_NOTES).child( intent.getStringExtra( "postID" ) );
+            noteRef.addValueEventListener( new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    DataModel note = dataSnapshot.getValue( DataModel.class );
+                    noteToView( note );
+                    Log.d("fb", note.getTitle());
+                    Log.d("fb", note.getSubtitle());
+                    Log.d("fb", note.getDate());
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            } );
+
+
+        }
 
     }
 
@@ -104,8 +137,15 @@ public class AddNoteActivity extends AppCompatActivity {
         DatabaseReference noteRef = FirebaseDatabase
                 .getInstance()
                 .getReference(Constants.FIREBASE_CHILD_NOTES);
-        DataModel new_note = new DataModel(mNoteTitle.getText().toString(), mNoteTextTV.getText().toString(), "12/04/2013");
+        DataModel new_note = new DataModel(mNoteTitle.getText().toString(), mNoteTextTV.getText().toString(), dateStr);
         noteRef.push().setValue(new_note);
+    }
+
+
+    private void noteToView(DataModel note){
+        mNoteTitle.setText(note.getTitle());
+        mDateTV.setText( note.getDate() );
+        mNoteTextTV.setText( note.getSubtitle() );
     }
 
     @OnClick(R.id.save_note_button)
@@ -157,10 +197,10 @@ public class AddNoteActivity extends AppCompatActivity {
                     Intent intent = new Intent();
                     intent.setType("image/*");
                     intent.setAction(Intent.ACTION_GET_CONTENT);
-                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
+                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), Constants.SELECT_PICTURE);
                 } else if (options[item].equals("Take Photo")) {
                     Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(cameraIntent, CAMERA_REQUEST);
+                    startActivityForResult(cameraIntent, Constants.CAMERA_REQUEST);
 
 
                 } else if (options[item].equals("Cancel")) {
@@ -176,7 +216,7 @@ public class AddNoteActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            if (requestCode == 1) {
+            if (requestCode == Constants.SELECT_PICTURE) {
                 // from camera
                 // Get the url from data
                 Uri selectedImageUri = data.getData();
@@ -186,9 +226,6 @@ public class AddNoteActivity extends AppCompatActivity {
                     Log.i("image", "Image Path : " + path);
                     // Set the image in ImageView
                     mNoteImage.setImageURI(selectedImageUri);
-
-                } else if (requestCode == 2) {
-
 
                 }
             }
