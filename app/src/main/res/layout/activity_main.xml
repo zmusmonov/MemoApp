@@ -7,6 +7,7 @@
                 android:layout_height="match_parent"
                 tools:context=".MainActivity"
     android:orientation="vertical"
+    android:background="@drawable/paper3"
 
     >
 
@@ -45,8 +46,8 @@
 
         >
         <info.hoang8f.widget.FButton
-            fbutton:buttonColor="@color/fbutton_color_amethyst"
-            fbutton:shadowColor="@color/fbutton_color_wisteria"
+            fbutton:buttonColor="@color/fbutton_color_carrot"
+            fbutton:shadowColor="@color/fbutton_color_pumpkin"
             fbutton:shadowEnabled="true"
             fbutton:shadowHeight="5dp"
             fbutton:cornerRadius="5dp"
@@ -58,8 +59,8 @@
             android:layout_marginRight="8dp"
         />
         <info.hoang8f.widget.FButton
-            fbutton:buttonColor="@color/fbutton_color_amethyst"
-            fbutton:shadowColor="@color/fbutton_color_wisteria"
+            fbutton:buttonColor="@color/fbutton_color_carrot"
+            fbutton:shadowColor="@color/fbutton_color_pumpkin"
             fbutton:shadowEnabled="true"
             fbutton:shadowHeight="5dp"
             fbutton:cornerRadius="5dp"

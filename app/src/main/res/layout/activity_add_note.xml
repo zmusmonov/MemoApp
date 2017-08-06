@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
+    xmlns:fbutton="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -81,5 +82,6 @@
             android:text="close"
             android:layout_width="100dp"
             android:layout_height="42dp"/>
+
     </LinearLayout>
 </RelativeLayout>
