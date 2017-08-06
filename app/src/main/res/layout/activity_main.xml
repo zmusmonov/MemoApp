@@ -10,6 +10,13 @@
 
     >
 
+    <TextView
+        android:text="Your saved Memos: "
+        android:textSize="18dp"
+        android:layout_margin="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
     <LinearLayout
         android:layout_weight="100"
         android:id="@+id/recycler_holder_liner_layout"
