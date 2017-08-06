@@ -18,16 +18,33 @@ public class DataModel {
     String date;
     String pushID;
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    String imageUrl;
 
 
     public DataModel() {
     }
 
+    public DataModel(String title, String subtitle, String date,String imageUrl) {
+        this.title = title;
+        this.subtitle = subtitle;
+        this.date = date;
+        this.pushID = pushID;
+        this.imageUrl = imageUrl;
+    }
     public DataModel(String title, String subtitle, String date) {
         this.title = title;
         this.subtitle = subtitle;
         this.date = date;
         this.pushID = pushID;
+        this.imageUrl = imageUrl;
     }
 
     public String getPushID() {

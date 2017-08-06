@@ -53,6 +53,8 @@ public class AddNoteActivity extends AppCompatActivity {
     private  String test = "Push test";
     private Boolean isNew = true;
     private String postID="";
+    String imageEncoded="";
+    Bitmap photo;
 
     @BindView(R.id.note_text_et)
     EditText mNoteTextTV;
@@ -142,7 +144,13 @@ public class AddNoteActivity extends AppCompatActivity {
                 .getInstance()
                 .getReference(Constants.FIREBASE_CHILD_NOTES);
         DataModel new_note = new DataModel(mNoteTitle.getText().toString(), mNoteTextTV.getText().toString(), dateStr);
-        noteRef.push().setValue(new_note);
+        DatabaseReference note_reference = noteRef.push();
+        postID = note_reference.getKey();
+        note_reference.setValue( new_note );
+        if(!postID.equals( "" )){
+            Log.d("FB",noteRef.getKey());
+            encodeBitmapAndSaveToFirebase(photo);
+        }
     }
     public void updateFirebase(){
         DatabaseReference noteRef = FirebaseDatabase
@@ -150,6 +158,7 @@ public class AddNoteActivity extends AppCompatActivity {
                 .getReference(Constants.FIREBASE_CHILD_NOTES);
         DataModel new_note = new DataModel(mNoteTitle.getText().toString(), mNoteTextTV.getText().toString(), dateStr);
         noteRef.child( postID ).setValue(new_note);
+
     }
 
     private void noteToView(DataModel note){
@@ -227,9 +236,10 @@ public class AddNoteActivity extends AppCompatActivity {
     public void encodeBitmapAndSaveToFirebase(Bitmap bitmap) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        String imageEncoded = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
+        imageEncoded = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
+        Log.d("Fb",postID);
         DatabaseReference ref = FirebaseDatabase.getInstance()
-                .getReference(Constants.FIREBASE_CHILD_NOTE_IMAGES)
+                .getReference(Constants.FIREBASE_CHILD_NOTES)
                 .child( postID )
                 .child("imageUrl");
         ref.setValue(imageEncoded);
@@ -253,9 +263,9 @@ public class AddNoteActivity extends AppCompatActivity {
                 }
             }
             else if(requestCode == Constants.CAMERA_REQUEST){
-                Bitmap photo = (Bitmap) data.getExtras().get("data");
+                photo = (Bitmap) data.getExtras().get("data");
                 mNoteImage.setImageBitmap(photo);
-                encodeBitmapAndSaveToFirebase(photo);
+
             }
         }
     }

@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
                     note.setPushID( snapshot.getKey() );
                     myData.add( note );
                     System.out.println( snapshot.getValue( DataModel.class ).getTitle() );
+                    System.out.println( snapshot.getValue( DataModel.class ).getImageUrl() );
                     Log.d( "Size", String.valueOf( myData.size() ) );
                 }
                 mAdapter = new MyAdapter( myData );
