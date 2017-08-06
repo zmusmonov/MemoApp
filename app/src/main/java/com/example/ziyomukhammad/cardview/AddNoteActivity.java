@@ -32,6 +32,7 @@ public class AddNoteActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.N)
 
     String dateStr = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
@@ -65,9 +66,9 @@ public class AddNoteActivity extends AppCompatActivity {
     private void updateLabel(Calendar calendar) {
         String myFormat = "MM/dd/yy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-        String date_only = sdf.format(calendar.getTime());
+
         mDateTV.setText(sdf.format(calendar.getTime()));
-        dateStr = mDateTV.getText().toString();
+        dateStr = calendar.getTime().toString();
     }
 
 

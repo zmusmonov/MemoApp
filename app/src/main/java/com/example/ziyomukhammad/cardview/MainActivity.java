@@ -25,6 +25,7 @@ import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
+
     private DatabaseReference mNotesReference;
 
     private RecyclerView.Adapter mAdapter;
@@ -60,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
                 .getInstance()
                 .getReference(Constants.FIREBASE_CHILD_NOTES);
 
-        // Attach a listener to read the data at our posts reference
+        // Attach a listener to read the data at ourr posts reference
         noteRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -99,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
 
                     mAdapter = new MyAdapter(myData);
                     mRecyclerView.setAdapter(mAdapter);
-
                 }
             }
         }
