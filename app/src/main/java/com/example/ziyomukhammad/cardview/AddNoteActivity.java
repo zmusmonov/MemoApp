@@ -17,6 +17,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -31,6 +32,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -50,6 +52,7 @@ public class AddNoteActivity extends AppCompatActivity {
 
     private  String test = "Push test";
     private Boolean isNew = true;
+    private String postID="";
 
     @BindView(R.id.note_text_et)
     EditText mNoteTextTV;
@@ -98,9 +101,10 @@ public class AddNoteActivity extends AppCompatActivity {
         Log.d("isNew",isNew+"");
         if(isNew==false){
             Log.d("isNew","I am here");
+            postID = intent.getStringExtra( "postID" );
             DatabaseReference noteRef = FirebaseDatabase
                     .getInstance()
-                    .getReference(Constants.FIREBASE_CHILD_NOTES).child( intent.getStringExtra( "postID" ) );
+                    .getReference(Constants.FIREBASE_CHILD_NOTES).child( postID );
             noteRef.addValueEventListener( new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -140,7 +144,13 @@ public class AddNoteActivity extends AppCompatActivity {
         DataModel new_note = new DataModel(mNoteTitle.getText().toString(), mNoteTextTV.getText().toString(), dateStr);
         noteRef.push().setValue(new_note);
     }
-
+    public void updateFirebase(){
+        DatabaseReference noteRef = FirebaseDatabase
+                .getInstance()
+                .getReference(Constants.FIREBASE_CHILD_NOTES);
+        DataModel new_note = new DataModel(mNoteTitle.getText().toString(), mNoteTextTV.getText().toString(), dateStr);
+        noteRef.child( postID ).setValue(new_note);
+    }
 
     private void noteToView(DataModel note){
         mNoteTitle.setText(note.getTitle());
@@ -154,7 +164,11 @@ public class AddNoteActivity extends AppCompatActivity {
         Intent returnIntent = new Intent();
         returnIntent.putExtra("text", "This is Note text");
         returnIntent.putExtra("date", "12/04/2013");
-        saveNoteToFirebase();
+        if(isNew==true){
+            saveNoteToFirebase();
+        }else{
+                updateFirebase();
+        }
         setResult(Activity.RESULT_OK, returnIntent);
         finish();
     }
@@ -210,7 +224,16 @@ public class AddNoteActivity extends AppCompatActivity {
         });
         builder.show();
     }
-
+    public void encodeBitmapAndSaveToFirebase(Bitmap bitmap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        String imageEncoded = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
+        DatabaseReference ref = FirebaseDatabase.getInstance()
+                .getReference(Constants.FIREBASE_CHILD_NOTE_IMAGES)
+                .child( postID )
+                .child("imageUrl");
+        ref.setValue(imageEncoded);
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -232,6 +255,7 @@ public class AddNoteActivity extends AppCompatActivity {
             else if(requestCode == Constants.CAMERA_REQUEST){
                 Bitmap photo = (Bitmap) data.getExtras().get("data");
                 mNoteImage.setImageBitmap(photo);
+                encodeBitmapAndSaveToFirebase(photo);
             }
         }
     }

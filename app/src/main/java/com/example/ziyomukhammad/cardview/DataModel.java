@@ -1,5 +1,7 @@
 package com.example.ziyomukhammad.cardview;
 
+
+
 /**
  * Created by ZiyoMukhammad on 8/3/17.
  */
@@ -9,13 +11,13 @@ package com.example.ziyomukhammad.cardview;
 // we have 4 parameters: date, subtitle, title and image
 //
 // Constructor, all setters and getters are created
-
 public class DataModel {
 
     String title;
     String subtitle;
     String date;
     String pushID;
+
 
 
     public DataModel() {
@@ -59,4 +61,6 @@ public class DataModel {
     public void setDate(String date) {
         this.date = date;
     }
+
+
 }

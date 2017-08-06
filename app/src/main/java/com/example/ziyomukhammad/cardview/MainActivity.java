@@ -9,7 +9,9 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -46,6 +48,12 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind( this );
         FirebaseDatabase.getInstance().setPersistenceEnabled( true );
 
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        if (auth.getCurrentUser() != null) {
+            Toast.makeText( this, "Signed in", Toast.LENGTH_SHORT );
+        } else {
+            Toast.makeText( this, "Not Signed in", Toast.LENGTH_SHORT );
+        }
 
         mNotesReference = FirebaseDatabase
                 .getInstance()
