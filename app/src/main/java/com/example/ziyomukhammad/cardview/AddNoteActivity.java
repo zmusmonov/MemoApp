@@ -42,6 +42,7 @@ public class AddNoteActivity extends AppCompatActivity {
 
     private static final int SELECT_PICTURE = 100;
 
+    private  String test = "Push test";
 
     @BindView(R.id.note_text_et)
     EditText mNoteTextTV;
