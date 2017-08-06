@@ -3,6 +3,12 @@ package com.example.ziyomukhammad.cardview;
 /**
  * Created by ZiyoMukhammad on 8/3/17.
  */
+//
+// Data model for our database
+// We have notes table and inside
+// we have 4 parameters: date, subtitle, title and image
+//
+// Constructor, all setters and getters are created
 
 public class DataModel {
 
